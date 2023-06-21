@@ -1,8 +1,9 @@
 name: Build and Compile
 on:
-  push:
-    branches:
-      - '*'
+  pull_request_target:
+    types:
+      - synchronize
+      - opened
 
 jobs:
   build:
@@ -20,25 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Compile software
+      - name: Compile branch
         run: npx tsc
 
-  check_new_branch:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Compile new branch
-        run: npx tsc --noEmit --project ${{ github.workspace }}/tsconfig.json
