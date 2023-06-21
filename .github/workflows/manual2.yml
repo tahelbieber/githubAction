@@ -1,9 +1,5 @@
 name: Comment on PR
-on:
-  pull_request:
-    types:
-      - opened
-
+on: pull_request
 jobs:
   comment:
     runs-on: ubuntu-latest
@@ -24,4 +20,5 @@ jobs:
               body: comment
             });
           token: ${{ secrets.GITHUB_TOKEN }}
+          pr-comment: "hii"
 
