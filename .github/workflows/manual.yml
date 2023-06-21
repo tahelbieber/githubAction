@@ -15,7 +15,7 @@ jobs:
         node-version: 14
 
     - name: Compile software
-      run: tsc
+      run: tsc npx
 
     - name: Notify on failure
       if: ${{ failure() }}
