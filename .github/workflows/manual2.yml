@@ -1,44 +1,27 @@
-name: Build and Compile
+name: Comment on PR
 on:
-  push:
-    branches:
-      - '*'
+  pull_request:
+    types:
+      - opened
 
 jobs:
-  build:
+  comment:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Comment on PR
+        uses: actions/github-script@v4
         with:
-          node-version: 14
+          script: |
+            const comment = `PR לקבל: ${process.env.GITHUB_REPOSITORY}`;
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Compile software
-        run: npx tsc
-
-  check_new_branch:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Compile new branch
-        run: npx tsc --noEmit --project ${{ github.workspace }}/tsconfig.json
