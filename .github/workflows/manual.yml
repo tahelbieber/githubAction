@@ -9,17 +9,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
-    - name: Compile software
-      run: npx tsc
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Notify on failure
-      if: ${{ failure() }}
-      run: echo "הקמפול נכשל על בראנץ הראשי"
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile software
+        run: npx tsc
+
+      - name: Notify on failure
+        if: ${{ failure() }}
+        run: echo "הקמפול נכשל על בראנץ הראשי"
+
 
 
 
