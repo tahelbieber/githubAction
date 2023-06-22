@@ -1,26 +1,38 @@
-name: Comment on PR
+name: Add Comment to PR
 on:
   pull_request:
     types:
       - opened
 
 jobs:
-  comment:
+  add-comment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Comment on PR
-        uses: actions/github-script@v4
+      - name: Add Comment
+        uses: actions/github-script@v5
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const comment = `PR לקבל: ${process.env.GITHUB_REPOSITORY}`;
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
-          token: ${{ secrets.GITHUB_TOKEN }}
+            const github = require('@actions/github');
+
+            const context = github.context;
+            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+
+            async function addComment() {
+              const comment = 'לקבל המשתמש - הערה מתוך קובת YML';
+              const { data: commentData } = await octokit.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment,
+              });
+
+              console.log(`Comment added: ${commentData.html_url}`);
+            }
+
+            addComment();
+
