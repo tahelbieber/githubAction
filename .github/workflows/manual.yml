@@ -1,31 +1,31 @@
-#name: Build and Compile
-#on:
- # push:
-  #  branches:
-   #   - main
+name: Build and Compile
+on:
+  push:
+    branches:
+      - main
 
-#jobs:
- # build:
-   # runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    #steps:
-     # - name: Setup Node.js
-       # uses: actions/setup-node@v2
-       # with:
-        #  node-version: 14
+    steps:
+     - name: Setup Node.js
+       uses: actions/setup-node@v2
+       with:
+          node-version: 14
 
-      #- name: Checkout code
-       # uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      #- name: Install dependencies
-       # run: npm install
+      - name: Install dependencies
+        run: npm install
 
-      #- name: Compile software
-       # run: npx tsc
+      - name: Compile software
+        run: npx tsc
 
-      #- name: Notify on failure
-       # if: ${{ failure() }}
-        #run: echo "הקמפול נכשל על בראנץ הראשי"
+      - name: Notify on failure
+        if: ${{ failure() }}
+        run: echo "הקמפול נכשל על בראנץ הראשי"
 
 
 
