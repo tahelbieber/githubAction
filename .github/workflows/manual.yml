@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     - name: Setup Node.js
-       uses: actions/setup-node@v2
-       with:
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
           node-version: 14
 
       - name: Checkout code
@@ -26,6 +26,7 @@ jobs:
       - name: Notify on failure
         if: ${{ failure() }}
         run: echo "הקמפול נכשל על בראנץ הראשי"
+
 
 
 
