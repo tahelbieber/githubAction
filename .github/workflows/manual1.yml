@@ -9,30 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
       - name: Add Comment
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const github = require('@actions/github');
+            const { owner, repo } = context.repo;
+            const { number } = context.issue;
 
-            const context = github.context;
-            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+            const comment = 'לקבל המשתמש - הערה מתוך קובת YAML';
+            await octokit.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: comment,
+            });
 
-            async function addComment() {
-              const comment = 'לקבל המשתמש - הערה מתוך קובת YML';
-              const { data: commentData } = await octokit.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: comment,
-              });
-
-              console.log(`Comment added: ${commentData.html_url}`);
-            }
-
-            addComment();
 
