@@ -1,31 +1,29 @@
-name: Build and Compile
+name: Add Comment to PR
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - opened
 
 jobs:
-  build:
+  add-comment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Add Comment
+        uses: actions/github-script@v5
         with:
-          node-version: 14
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const { number } = context.issue;
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Compile software
-        run: npx tsc
-
-      - name: Notify on failure
-        if: ${{ failure() }}
-        run: echo "הקמפול נכשל על בראנץ הראשי"
+            const comment = 'לקבל המשתמש - הערה מתוך קובת YAML';
+            await octokit.issues.createComment({
+              owner,
+              repo,
+              issue_number: number,
+              body: comment,
+            });
 
 
 
